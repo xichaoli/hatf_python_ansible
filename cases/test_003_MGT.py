@@ -25,34 +25,33 @@ def plug_into_cable(request):
    return port
 
 @allure.feature("管理网口测试")
-class TestGMT:
-    @allure.title("查看管理网口是否被正确识别")
-    @pytest.mark.dependency()
-    def test_interface_identification(self, plug_into_cable):
-        ret = subprocess.run("ethtool -i {} | grep driver".format(plug_into_cable), shell=True, stdout=subprocess.PIPE,
+@allure.title("查看管理网口是否被正确识别")
+@pytest.mark.dependency()
+def test_interface_identification(plug_into_cable):
+    ret = subprocess.run("ethtool -i {} | grep driver".format(plug_into_cable), shell=True, stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    assert "st_gmac" in ret.stdout
+
+@allure.title("查看管理网口的协商速率是否正确")
+@pytest.mark.dependency()
+def test_interface_stat(request, plug_into_cable):
+    depends(request, ["test_interface_identification[{}]".format(plug_into_cable)])
+    ret = subprocess.run("ethtool {} | grep Speed:".format(plug_into_cable), shell=True, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, universal_newlines=True, check=True)
-        assert "st_gmac" in ret.stdout
+    assert "1000Mb/s" in ret.stdout
 
-    @allure.title("查看管理网口的协商速率是否正确")
-    @pytest.mark.dependency()
-    def test_interface_stat(self, request, plug_into_cable):
-        depends(request, ["test_interface_identification[{}]".format(plug_into_cable)])
-        ret = subprocess.run("ethtool {} | grep Speed:".format(plug_into_cable), shell=True, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, universal_newlines=True, check=True)
-        assert "1000Mb/s" in ret.stdout
+@allure.title("查看管理网口能否正常通信")
+@pytest.mark.dependency()
+def test_interface_ping(request, plug_into_cable):
+    depends(request, ["test_interface_identification[{}]".format(plug_into_cable)])
+    if plug_into_cable == "eth0":
+        dst_ip = "192.168.0.70"
+    else:
+        dst_ip = "192.168.1.70"
 
-    @allure.title("查看管理网口能否正常通信")
-    @pytest.mark.dependency()
-    def test_interface_ping(self, request, plug_into_cable):
-        depends(request, ["test_interface_identification[{}]".format(plug_into_cable)])
-        if plug_into_cable == "eth0":
-            dst_ip = "192.168.0.70"
-        else:
-            dst_ip = "192.168.1.70"
-
-        ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, universal_newlines=True, check=True)
-        assert 0 == ret.returncode
+    ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    assert 0 == ret.returncode
 
 if __name__ == "__main__":
     pytest.main(["--alluredir", "results/MGT", "test_003_MGT.py"])
