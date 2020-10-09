@@ -11,6 +11,7 @@ w.msgbox("欢迎使用主板检测系统，请点击 '确认' 开始测试。")
 w.title = "主板型号"
 w.height = 14
 board_model = w.radiolist("请选择主板型号：", ["A8210", "E8210", "A8240", "N8210", "N4210", "M4210"])[0][0]
+os.environ["BOARD_MODEL"] = board_model
 
 w.title = "主板序列号"
 board_serial = w.inputbox("请输入主板序列号:", default=board_model)[0]
@@ -39,6 +40,7 @@ def generate_report():
 def post_run():
     """测试完成后的操作"""
     os.unlink(top_dir + "/cases_to_run")
+    del os.environ["BOARD_MODEL"]
 
 try:
     select_testcase(board_model)
