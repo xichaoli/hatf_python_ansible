@@ -30,12 +30,15 @@ def select_testcase(model):
 
 def run_testcase():
     """执行测试用例"""
-    pytest.main(["--alluredir={}".format(result_dir), "cases_to_run"])
+    pytest.main(["--alluredir={}".format(result_dir), "--host-pattern={}".format(board_model), "cases_to_run"])
 
 def generate_report():
     """生成测试报告"""
     subprocess.run("allure generate {} -c -o {}".format(result_dir, report_dir), shell=True,
-                         stdout=subprocess.PIPE, universal_newlines=True, check=True)
+                   stdout=subprocess.PIPE, universal_newlines=True, check=True)
+    """打开测试报告"""
+    subprocess.run("allure open {}".format(report_dir), shell=True,
+                   stdout=subprocess.PIPE, universal_newlines=True, check=True)
 
 def post_run():
     """测试完成后的操作"""
@@ -48,5 +51,6 @@ try:
     run_testcase()
 
     generate_report()
+
 finally:
     post_run()
