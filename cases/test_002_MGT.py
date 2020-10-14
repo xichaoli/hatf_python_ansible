@@ -44,7 +44,7 @@ def test_interface_ping(plug_into_cable):
         dst_ip = "192.168.1.91"
 
     ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, universal_newlines=True, check=True)
+                         stderr=subprocess.PIPE, universal_newlines=True, check=False)
 
     if ret.returncode and (plug_into_cable == "enp9s0" or plug_into_cable == "enP1p36s12f0"):
         pytest.exit("测试控制机到被测设备的网络不通，本次测试结束")
