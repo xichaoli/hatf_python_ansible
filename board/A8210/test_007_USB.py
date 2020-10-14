@@ -1,1 +1,0 @@
-../../cases/test_007_USB.py
