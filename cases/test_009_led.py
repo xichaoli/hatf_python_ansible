@@ -19,8 +19,8 @@ board_model = os.getenv("BOARD_MODEL")
 @allure.title("查看能否控制LED灯 绿色长亮")
 def test_beep_up_green():
     if board_model == "A8210":
-        subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x01'".format(board_model), shell=True,
-                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     else: # A8240
         subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x01'".format(board_model), shell=True,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -34,14 +34,14 @@ def test_beep_up_green():
 @allure.title("查看能否控制LED灯 绿色闪烁")
 def test_beep_blink_green():
     if board_model == "A8210":
-        subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x11'".format(board_model), shell=True,
-                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     else: #A8240
         subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x11'".format(board_model), shell=True,
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为 绿色闪烁？", default="no")
+    ret = w.yesno("请确认LED灯状态是否为 绿色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
     assert not ret, "LED灯状态不是 绿色闪烁，请做进一步检查"
 
 
@@ -49,8 +49,8 @@ def test_beep_blink_green():
 @allure.title("查看能否控制LED灯 红色长亮")
 def test_beep_up_red():
     if board_model == "A8210":
-        subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x12'".format(board_model), shell=True,
-                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     else: #A8240
         subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x12'".format(board_model), shell=True,
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -63,14 +63,14 @@ def test_beep_up_red():
 @allure.title("查看能否控制LED灯 红色闪烁")
 def test_beep_blink_red():
     if board_model == "A8210":
-        subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x22'".format(board_model), shell=True,
-                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     else: #A8240
         subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x22'".format(board_model), shell=True,
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为 红色闪烁？", default="no")
+    ret = w.yesno("请确认LED灯状态是否为 红色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
     assert not ret, "LED灯状态不是 红色闪烁，请做进一步检查"
 
 
@@ -78,8 +78,12 @@ def test_beep_blink_red():
 @allure.title("查看能否控制LED灯灭")
 def test_beep_down():
     if board_model == "A8210":
-        subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x0'".format(board_model), shell=True,
-                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        with allure.step("熄灭绿色灯"):
+            subprocess.run("ansible {} -m shell -a 'echo 0 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+        with allure.step("熄灭红色灯"):
+            subprocess.run("ansible {} -m shell -a 'echo 0 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
+                       shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     else: # A8240
         subprocess.run("ansible {} -m shell -a 'i2cset -f -y 0 0x64 0xc 0x0'".format(board_model), shell=True,
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)

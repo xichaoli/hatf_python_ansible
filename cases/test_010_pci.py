@@ -18,7 +18,7 @@ from pytest_dependency import depends
 
 board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210":
-    device_list = ["03:00", "0b:00", "0001:22:00"]
+    device_list = ["03:00", "04:00", "0001:27:00"]
 else: # A8240
     device_list = ["03:00", "0b:00", "0001:22:00", "0001:25:00"]
 
@@ -31,9 +31,9 @@ def plug_into_pcie_card(request):
 
    if device_vendor == "03:00":
         device = "横插X710"
-   elif device_vendor == "0b:00":
+   elif device_vendor == "0b:00" or device_vendor == "04:00":
         device = "丽华两口X710"
-   elif device_vendor == "0001:22:00":
+   elif device_vendor == "0001:22:00" or device_vendor == "0001:27:00":
         device = "LR-LINK 四口X710"
    else:
         device = "FP068E 四口X710"

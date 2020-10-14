@@ -34,10 +34,14 @@ def plug_into_cable(request):
 @allure.title("查看管理网口能否正常通信")
 @pytest.mark.dependency()
 def test_interface_ping(plug_into_cable):
-    if plug_into_cable == "enp9s0" or plug_into_cable == "enP1p36s12f0":
+    if plug_into_cable == "enp9s0":
         dst_ip = "192.168.0.92"
-    else:
+    elif plug_into_cable == "enP1p36s12f0":
+        dst_ip = "192.168.0.91"
+    elif plug_into_cable == "enp10s0":
         dst_ip = "192.168.1.92"
+    else:
+        dst_ip = "192.168.1.91"
 
     ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, universal_newlines=True, check=True)
