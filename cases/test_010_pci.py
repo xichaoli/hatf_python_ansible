@@ -55,7 +55,7 @@ def test_pcie_card_identification(plug_into_pcie_card):
 @allure.feature("PCIe 插槽测试")
 @allure.title("查看PCIe卡连接状态是否为预期")
 @pytest.mark.dependency()
-def test_usb_protocol(request, plug_into_pcie_card):
+def test_pcie_card_protocol(request, plug_into_pcie_card):
     depends(request, ["test_pcie_card_identification[{}]".format(plug_into_pcie_card)])
     ret = subprocess.run("ansible {} -m shell -a 'lspci -n -s {} -vv | grep LnkSta:'".format(board_model, plug_into_pcie_card),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
