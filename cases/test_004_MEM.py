@@ -19,7 +19,7 @@ board_model = os.getenv("BOARD_MODEL")
 if board_model == "N4210":
     memsize = "16G"
 else:
-    memsize = "64G"
+    memsize = "31G"
 
 
 @allure.feature("内存状态测试")

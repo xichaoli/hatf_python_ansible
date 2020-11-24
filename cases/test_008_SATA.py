@@ -15,17 +15,18 @@ from whiptail import Whiptail
 
 board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8240":
-    disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1", "DGDZM256S3DMASD"]
+    disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1"]
 else:
     disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1"]
 
 @pytest.fixture(scope="module", params=disk_model)
 def plug_into_harddisk(request):
-   """测试前确认所需设备是否插好"""
-   model = request.param
-   w = Whiptail(width=60, height=10, title="需确认")
-   w.msgbox("请确认设备型号为 {} 的测试硬盘已插入SATA口。".format(model))
-   return model
+    """测试前确认所需设备是否插好"""
+    model = request.param
+    if os.getenv("MORE_INTERACTIVE"):
+        w = Whiptail(width=60, height=10, title="需确认")
+        w.msgbox("请确认设备型号为 {} 的测试硬盘已插入SATA口。".format(model))
+    return model
 
 
 @allure.feature("SATA 端口测试")

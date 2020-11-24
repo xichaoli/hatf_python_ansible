@@ -18,25 +18,28 @@ board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210":
     device_list = ["046d:c534", "0781:5590"]
 else: # A8240
-    device_list = ["046d:c534", "0781:5590", "090c:1000"]
+    device_list = ["046d:c534", "0781:5590", "0951:1665"]
 
 
 @pytest.fixture(scope="module", params=device_list)
 def plug_into_usb(request):
-   """测试前确认所需设备是否插好"""
-   """其中Samsung U盘插在竖立的USB3.0口"""
-   device_vendor = request.param
-   w = Whiptail(width=60, height=10, title="需确认")
+    """测试前确认所需设备是否插好"""
+    """其中Samsung U盘插在竖立的USB3.0口"""
+    device_vendor = request.param
 
-   if device_vendor == "046d:c534":
-       device = "Logitech 无线键鼠接收器"
-   elif device_vendor == "0781:5590":
-       device = "SanDisk U盘"
-   else:
-       device = "Samsung U盘"
+    if os.getenv("MORE_INTERACTIVE"):
+         w = Whiptail(width=60, height=10, title="需确认")
 
-   w.msgbox("请确认测试用USB设备 {} 已正确插入".format(device))
-   return device_vendor
+         if device_vendor == "046d:c534":
+             device = "Logitech 无线键鼠接收器"
+         elif device_vendor == "0781:5590":
+             device = "SanDisk U盘"
+         else:
+             device = "Samsung U盘"
+
+         w.msgbox("请确认测试用USB设备 {} 已正确插入".format(device))
+
+    return device_vendor
 
 
 @allure.feature("USB端口测试")

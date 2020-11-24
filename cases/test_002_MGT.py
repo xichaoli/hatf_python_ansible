@@ -18,15 +18,16 @@ board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210":
     port_list = ["enP1p36s12f0", "enP1p36s12f1"]
 else:
-    port_list = ["enp9s0", "enp10s0"]
+    port_list = ["enp9s0"]
 
 
 @pytest.fixture(scope="module", params=port_list)
 def plug_into_cable(request):
    """测试前确认网线是否插好"""
    port = request.param
-   w = Whiptail(width=60, height=10, title="请确认")
-   w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
+   if os.getenv("MORE_INTERACTIVE"):
+        w = Whiptail(width=60, height=10, title="请确认")
+        w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
    return port
 
 

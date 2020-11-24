@@ -25,22 +25,24 @@ else: # A8240
 
 @pytest.fixture(scope="module", params=device_list)
 def plug_into_pcie_card(request):
-   """测试前确认所需设备是否插好"""
-   device_vendor = request.param
-   w = Whiptail(width=60, height=10, title="请确认")
+    """测试前确认所需设备是否插好"""
+    device_vendor = request.param
 
-   if device_vendor == "03:00":
-        device = "横插X710"
-   elif device_vendor == "0b:00" or device_vendor == "04:00":
-        device = "丽华两口X710"
-   elif device_vendor == "0001:22:00" or device_vendor == "0001:27:00":
-        device = "LR-LINK 四口X710"
-   else:
-        device = "FP068E 四口X710"
+    if os.getenv("MORE_INTERACTIVE"):
+        w = Whiptail(width=60, height=10, title="请确认")
 
-   w.msgbox("请确认测试用pcie卡 {} 已正确插入".format(device))
+        if device_vendor == "03:00":
+             device = "横插X710"
+        elif device_vendor == "0b:00" or device_vendor == "04:00":
+             device = "丽华两口X710"
+        elif device_vendor == "0001:22:00" or device_vendor == "0001:27:00":
+             device = "LR-LINK 四口X710"
+        else:
+             device = "FP068E 四口X710"
 
-   return device_vendor
+        w.msgbox("请确认测试用pcie卡 {} 已正确插入".format(device))
+
+    return device_vendor
 
 
 @allure.feature("PCIe 插槽测试")

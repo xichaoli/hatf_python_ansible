@@ -14,6 +14,7 @@ from whiptail import Whiptail
 @allure.feature("查看系统是否正常启动")
 @allure.title("查看显示器输出，确认系统启动状态")
 @pytest.mark.dependency()
+@pytest.mark.skip(reason="为加速测试速度，此测试项通过目测完成")
 def test_monitor():
     w = Whiptail(width=60, height=10)
     ret = w.yesno("请查看显示器输出，确认系统是否启动成功", default="no")

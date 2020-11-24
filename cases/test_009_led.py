@@ -41,8 +41,13 @@ def test_beep_blink_green():
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为 绿色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
-    assert not ret, "LED灯状态不是 绿色闪烁，请做进一步检查"
+
+    if os.getenv("MORE_INTERACTIVE"):
+        ret = w.yesno("请确认LED灯状态是否为 绿色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="yes")
+        assert ret, "LED灯状态不是 绿色闪烁，请做进一步检查"
+    else:
+        ret = w.yesno("请确认LED灯状态是否为 绿色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
+        assert not ret, "LED灯状态不是 绿色闪烁，请做进一步检查"
 
 
 @allure.feature("管理板 SYS LED灯测试")
@@ -56,8 +61,12 @@ def test_beep_up_red():
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为 红色长亮？", default="no")
-    assert not ret, "LED灯状态不是 红色长亮，请做进一步检查"
+    if os.getenv("MORE_INTERACTIVE"):
+        ret = w.yesno("请确认LED灯状态是否为 红色长亮？", default="yes")
+        assert ret, "LED灯状态不是 红色长亮，请做进一步检查"
+    else:
+        ret = w.yesno("请确认LED灯状态是否为 红色长亮？", default="no")
+        assert not ret, "LED灯状态不是 红色长亮，请做进一步检查"
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 红色闪烁")
@@ -70,8 +79,12 @@ def test_beep_blink_red():
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为 红色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
-    assert not ret, "LED灯状态不是 红色闪烁，请做进一步检查"
+    if os.getenv("MORE_INTERACTIVE"):
+        ret = w.yesno("请确认LED灯状态是否为 红色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="yes")
+        assert ret, "LED灯状态不是 红色闪烁，请做进一步检查"
+    else:
+        ret = w.yesno("请确认LED灯状态是否为 红色闪烁？A8210 由于驱动原因，闪烁频率很快。", default="no")
+        assert not ret, "LED灯状态不是 红色闪烁，请做进一步检查"
 
 
 @allure.feature("管理板 SYS LED灯测试")
@@ -89,9 +102,12 @@ def test_beep_down():
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
-    ret = w.yesno("请确认LED灯状态是否为灭？", default="no")
-    assert not ret, "LED灯状态不是灭，请做进一步检查"
-
+    if os.getenv("MORE_INTERACTIVE"):
+        ret = w.yesno("请确认LED灯状态是否为灭？", default="yes")
+        assert ret, "LED灯状态不是灭，请做进一步检查"
+    else:
+        ret = w.yesno("请确认LED灯状态是否为灭？", default="no")
+        assert not ret, "LED灯状态不是灭，请做进一步检查"
 
 if __name__ == "__main__":
     pytest.main(["--alluredir", "results/RTC", "test_009_led.py"])
