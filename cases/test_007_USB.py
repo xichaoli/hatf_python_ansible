@@ -18,7 +18,7 @@ board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210":
     device_list = ["046d:c534", "0781:5590"]
 else: # A8240
-    device_list = ["046d:c534", "0781:5590", "0951:1665"]
+    device_list = ["0951:1666", "0781:5590", "0951:1665"]
 
 
 @pytest.fixture(scope="module", params=device_list)
@@ -45,6 +45,7 @@ def plug_into_usb(request):
 @allure.feature("USB端口测试")
 @allure.title("查看U盘是否被正确识别")
 @pytest.mark.dependency()
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用USB口")
 def test_usb_identification(plug_into_usb):
     ret = subprocess.run("ansible {} -m shell -a 'lsusb -d {}'".format(board_model, plug_into_usb),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -60,7 +61,7 @@ def test_usb_protocol(request, plug_into_usb):
     ret = subprocess.run("ansible {} -m shell -a 'lsusb -d {} -v | grep bcdUSB'".format(board_model, plug_into_usb),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    assert "2.00" in ret.stdout or "2.10" in ret.stdout or "3.00" in ret.stdout or "3.10" in ret.stdout
+    assert "2.00" in ret.stdout or "2.10" in ret.stdout or "3.00" in ret.stdout or "3.10" in ret.stdout or "3.20" in ret.stdout
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 """
 Copyright(C), ZYTC
-File name: test_002_MGT.py
+File name: test_013_business.py
 Author: lixc
-Version: 0.2
-Date: 2020-10-12
-Description: Test case for management network ports.
+Version: 0.1
+Date: 2020-11-12
+Description: Test case for business network ports.
 """
 
 import os
@@ -15,48 +15,50 @@ from whiptail import Whiptail
 from pytest_dependency import depends
 
 board_model = os.getenv("BOARD_MODEL")
-if board_model == "A8210" or board_model == "A8211":
-    port_list = ["enP1p36s12f0"]
+
+if board_model == "A8211":
+    port_list = ["enp3s0f0", "enp3s0f1", "enp3s0f2", "enp3s0f3"]
 else:
-    port_list = ["enp9s0"]
+    port_list = []
 
 
 @pytest.fixture(scope="module", params=port_list)
 def plug_into_cable(request):
    """测试前确认网线是否插好"""
    port = request.param
-   if os.getenv("MORE_INTERACTIVE"):
-        w = Whiptail(width=60, height=10, title="请确认")
-        w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
+   #w = Whiptail(width=60, height=10, title="请确认")
+   #w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
    return port
 
 
-@allure.feature("管理网口测试")
-@allure.title("查看管理网口能否正常通信")
+@allure.feature("业务网口测试")
+@allure.title("查看业务网口能否正常通信")
 @pytest.mark.dependency()
 def test_interface_ping(plug_into_cable):
-    if plug_into_cable == "enp9s0":
-        dst_ip = "192.168.0.92"
+    if plug_into_cable == "enp3s0f0":
+        dst_ip = "192.168.10.91"
+    elif plug_into_cable == "enp3s0f1":
+        dst_ip = "192.168.11.91"
+    elif plug_into_cable == "enp3s0f2":
+        dst_ip = "192.168.12.91"
     else:
-        dst_ip = "192.168.0.91"
+        dst_ip = "192.168.13.91"
 
     ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, universal_newlines=True, check=False)
 
-    if ret.returncode and (plug_into_cable == "enp9s0" or plug_into_cable == "enP1p36s12f0"):
-        pytest.exit("测试控制机到被测设备的网络不通，本次测试结束")
-
     assert 0 == ret.returncode
 
 
-@allure.feature("管理网口测试")
-@allure.title("查看管理网口是否被正确识别")
+@allure.feature("业务网口测试")
+@allure.title("查看业务网口是否被正确识别")
 @pytest.mark.dependency()
+@pytest.mark.skipif(board_model == "A8210" or board_model == "A8240", reason="对于A8210和A8240两款主板，不做业务网口的测试")
 def test_interface_identification(request, plug_into_cable):
-    if board_model == "A8210" or board_model == "A8211":
-        drive = "st_gmac"
-    else:
+    if board_model == "A8211":
         drive = "igb"
+    else:
+        drive = "ixgbe"
 
     depends(request, ["test_interface_ping[{}]".format(plug_into_cable)])
     ret = subprocess.run("ansible {} -m shell -a 'ethtool -i {} | grep driver'".format(board_model, plug_into_cable),
@@ -65,16 +67,21 @@ def test_interface_identification(request, plug_into_cable):
     assert drive in ret.stdout
 
 
-@allure.feature("管理网口测试")
-@allure.title("查看管理网口的协商速率是否正确")
+@allure.feature("业务网口测试")
+@allure.title("查看业务网口的协商速率是否正确")
 @pytest.mark.dependency()
 def test_interface_stat(request, plug_into_cable):
     depends(request, ["test_interface_ping[{}]".format(plug_into_cable)])
     ret = subprocess.run("ansible {} -m shell -a 'ethtool {} | grep Speed:'".format(board_model, plug_into_cable),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    assert "1000Mb/s" in ret.stdout
+    if board_model == "A8211":
+        speed = "1000Mb/s"
+    else:
+        speed = "10000Mb/s"
+
+    assert speed in ret.stdout
 
 
 if __name__ == "__main__":
-    pytest.main(["--alluredir", "results/MGT", "test_002_MGT.py"])
+    pytest.main(["--alluredir", "results/buiness", "test_013_buiness.py"])

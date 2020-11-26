@@ -19,6 +19,8 @@ from pytest_dependency import depends
 board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210":
     device_list = ["03:00", "04:00", "0001:27:00"]
+elif board_model == "A8211":
+    device_list = ["03:00", "0001:25:00"]
 else: # A8240
     device_list = ["03:00", "0b:00", "0001:22:00", "0001:25:00"]
 
@@ -51,7 +53,11 @@ def plug_into_pcie_card(request):
 def test_pcie_card_identification(plug_into_pcie_card):
     ret = subprocess.run("ansible {} -m shell -a 'lspci -n -s {}'".format(board_model, plug_into_pcie_card),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
-    assert "8086:1572" in ret.stdout or "8086:1581" in ret.stdout , "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
+
+    if board_model == "A8211":
+        assert "8086:1521" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
+    else:
+        assert "8086:1572" in ret.stdout or "8086:1581" in ret.stdout , "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
 
 
 @allure.feature("PCIe 插槽测试")
@@ -61,7 +67,12 @@ def test_pcie_card_protocol(request, plug_into_pcie_card):
     depends(request, ["test_pcie_card_identification[{}]".format(plug_into_pcie_card)])
     ret = subprocess.run("ansible {} -m shell -a 'lspci -n -s {} -vv | grep LnkSta:'".format(board_model, plug_into_pcie_card),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
-    assert "Speed 8GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
+
+    if board_model == "A8211":
+        if plug_into_pcie_card == "03:00" or plug_into_pcie_card == "0001:25:00":
+            assert "Speed 5GT/s, Width x4" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
+    else:
+        assert "Speed 8GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
 
 
 if __name__ == "__main__":
