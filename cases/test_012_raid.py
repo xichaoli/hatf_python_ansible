@@ -2,8 +2,8 @@
 Copyright(C), ZYTC
 File name: test_012_raid.py
 Author: lixc
-Version: 0.1
-Date: 2020-11-12
+Version: 0.2
+Date: 2020-11-26
 Description: Test case for raid status.
 """
 

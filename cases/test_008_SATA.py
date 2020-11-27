@@ -33,7 +33,7 @@ def plug_into_harddisk(request):
 
 @allure.feature("SATA 端口测试")
 @allure.title("查看SATA口硬盘是否被正确识别")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用SATA口")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A82451", reason="此型号产品没有使用SATA口")
 def test_sata_identification(plug_into_harddisk):
     ret = subprocess.run("ansible {} -m shell -a 'lsscsi'".format(board_model), shell=True, stdout=subprocess.PIPE,
                      stderr=subprocess.PIPE, universal_newlines=True, check=True)
