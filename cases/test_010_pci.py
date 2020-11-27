@@ -24,6 +24,8 @@ elif board_model == "A8211":
     device_list = ["03:00", "0001:25:00"]
 elif board_model == "A8246":
     device_list = ["0001:24:00", "0001:25:00"]
+elif board_model == "A8245":
+    device_list = ["03:00", "0b:00", "0c:00", "0001:22:00.0", "0001:24:00", "0001:25:00"]
 else: # A8240
     device_list = ["03:00", "0b:00", "0001:22:00", "0001:25:00"]
 
@@ -61,6 +63,8 @@ def test_pcie_card_identification(plug_into_pcie_card):
         assert "8086:1521" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     elif board_model == "A8246":
         assert "8086:1522" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
+    elif board_model == "A8245" or board_model == "A82451":
+        assert "8086:1522" in ret.stdout or "1002:6779" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     else:
         assert "8086:1572" in ret.stdout or "8086:1581" in ret.stdout , "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
 
@@ -73,7 +77,12 @@ def test_pcie_card_protocol(request, plug_into_pcie_card):
     ret = subprocess.run("ansible {} -m shell -a 'lspci -n -s {} -vv | grep LnkSta:'".format(board_model, plug_into_pcie_card),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    if board_model == "A8211" or board_model == "A8246":
+    if board_model == "A8245":
+        if plug_into_pcie_card == "03:00" or plug_into_pcie_card == "0001:22:00.0":
+            assert "Speed 5GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
+        else:
+            assert "Speed 5GT/s, Width x4" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
+    elif board_model == "A8211" or board_model == "A8246":
         assert "Speed 5GT/s, Width x4" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
     else:
         assert "Speed 8GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)

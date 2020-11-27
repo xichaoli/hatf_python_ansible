@@ -15,8 +15,7 @@ from whiptail import Whiptail
 
 board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8240":
-    #disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1", "DGDZM256S3DMASD"]
-    disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1"]
+    disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1", "DGDZM256S3DMASD"]
 elif board_model == "A8246":
     disk_model = ["WD1004FBYZ-23YC"]
 else:

@@ -34,8 +34,10 @@ def plug_into_usb(request):
              device = "Logitech 无线键鼠接收器"
          elif device_vendor == "0781:5590":
              device = "SanDisk U盘"
-         else:
+         elif device_vendor == "090c:1000":
              device = "Samsung U盘"
+         else:
+             device = "其它"
 
          w.msgbox("请确认测试用USB设备 {} 已正确插入".format(device))
 

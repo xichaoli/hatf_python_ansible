@@ -56,9 +56,9 @@ def test_interface_ping(plug_into_cable):
 @allure.feature("业务网口测试")
 @allure.title("查看业务网口是否被正确识别")
 @pytest.mark.dependency()
-@pytest.mark.skipif(board_model == "A8210" or board_model == "A8240", reason="对于A8210和A8240两款主板，不做业务网口的测试")
+@pytest.mark.skipif(board_model == "A8210" or board_model == "A8240" or board_model == "A8245", reason="对于主板型号产品，不做业务网口的测试")
 def test_interface_identification(request, plug_into_cable):
-    if board_model == "A8211" or board_model == "A8246":
+    if board_model == "A8211" or board_model == "A8246" or board_model == "A82451":
         drive = "igb"
     else:
         drive = "ixgbe"
@@ -78,7 +78,7 @@ def test_interface_stat(request, plug_into_cable):
     ret = subprocess.run("ansible {} -m shell -a 'ethtool {} | grep Speed:'".format(board_model, plug_into_cable),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    if board_model == "A8211" or board_model == "A8246":
+    if board_model == "A8211" or board_model == "A8246" or board_model == "A82451":
         speed = "1000Mb/s"
     else:
         speed = "10000Mb/s"
