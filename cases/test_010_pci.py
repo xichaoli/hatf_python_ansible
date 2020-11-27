@@ -64,7 +64,7 @@ def test_pcie_card_identification(plug_into_pcie_card):
     elif board_model == "A8246":
         assert "8086:1522" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     elif board_model == "A8245" or board_model == "A82451":
-        assert "8086:1522" in ret.stdout or "1002:6779" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
+        assert "8086:1521" in ret.stdout or "1002:6779" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     else:
         assert "8086:1572" in ret.stdout or "8086:1581" in ret.stdout , "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
 
