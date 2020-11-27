@@ -18,28 +18,31 @@ board_model = os.getenv("BOARD_MODEL")
 
 if board_model == "A8211":
     port_list = ["enp3s0f0", "enp3s0f1", "enp3s0f2", "enp3s0f3"]
+elif board_model == "A8246":
+    port_list = ["enP1p36s0f0", "enP1p36s0f1", "enP1p36s0f2", "enP1p36s0f3"]
 else:
     port_list = []
 
 
 @pytest.fixture(scope="module", params=port_list)
 def plug_into_cable(request):
-   """测试前确认网线是否插好"""
-   port = request.param
-   #w = Whiptail(width=60, height=10, title="请确认")
-   #w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
-   return port
+    """测试前确认网线是否插好"""
+    port = request.param
+    if os.getenv("MORE_INTERACTIVE"): 
+        w = Whiptail(width=60, height=10, title="请确认")
+        w.msgbox("请确认业务网口 {} 的网线已接入千兆网络".format(port))
+    return port
 
 
 @allure.feature("业务网口测试")
 @allure.title("查看业务网口能否正常通信")
 @pytest.mark.dependency()
 def test_interface_ping(plug_into_cable):
-    if plug_into_cable == "enp3s0f0":
+    if plug_into_cable == "enp3s0f0" or plug_into_cable == "enP1p36s0f0":
         dst_ip = "192.168.10.91"
-    elif plug_into_cable == "enp3s0f1":
+    elif plug_into_cable == "enp3s0f1" or plug_into_cable == "enP1p36s0f1":
         dst_ip = "192.168.11.91"
-    elif plug_into_cable == "enp3s0f2":
+    elif plug_into_cable == "enp3s0f2" or plug_into_cable == "enP1p36s0f2":
         dst_ip = "192.168.12.91"
     else:
         dst_ip = "192.168.13.91"
@@ -55,7 +58,7 @@ def test_interface_ping(plug_into_cable):
 @pytest.mark.dependency()
 @pytest.mark.skipif(board_model == "A8210" or board_model == "A8240", reason="对于A8210和A8240两款主板，不做业务网口的测试")
 def test_interface_identification(request, plug_into_cable):
-    if board_model == "A8211":
+    if board_model == "A8211" or board_model == "A8246":
         drive = "igb"
     else:
         drive = "ixgbe"
@@ -75,7 +78,7 @@ def test_interface_stat(request, plug_into_cable):
     ret = subprocess.run("ansible {} -m shell -a 'ethtool {} | grep Speed:'".format(board_model, plug_into_cable),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    if board_model == "A8211":
+    if board_model == "A8211" or board_model == "A8246":
         speed = "1000Mb/s"
     else:
         speed = "10000Mb/s"

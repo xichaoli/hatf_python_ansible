@@ -17,7 +17,7 @@ board_model = os.getenv("BOARD_MODEL")
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 绿色长亮")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用管理板的可控LED灯")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用管理板的可控LED灯")
 def test_beep_up_green():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
@@ -33,7 +33,7 @@ def test_beep_up_green():
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 绿色闪烁")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用管理板的可控LED灯")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用管理板的可控LED灯")
 def test_beep_blink_green():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
@@ -54,7 +54,7 @@ def test_beep_blink_green():
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 红色长亮")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用管理板的可控LED灯")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用管理板的可控LED灯")
 def test_beep_up_red():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
@@ -73,7 +73,7 @@ def test_beep_up_red():
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 红色闪烁")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用管理板的可控LED灯")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用管理板的可控LED灯")
 def test_beep_blink_red():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
@@ -93,7 +93,7 @@ def test_beep_blink_red():
 
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯灭")
-@pytest.mark.skipif(board_model=="A8211", reason="此型号产品没有使用管理板的可控LED灯")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用管理板的可控LED灯")
 def test_beep_down():
     if board_model == "A8210":
         with allure.step("熄灭绿色灯"):

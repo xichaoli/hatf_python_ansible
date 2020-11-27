@@ -18,8 +18,8 @@ board_model = os.getenv("BOARD_MODEL")
 
 if board_model == "N4210":
     memsize = "16G"
-elif board_model == "A8211" or board_model == "A8246":
-    memsize = "31G"
+elif board_model == "A82451":
+    memsize = "64G"
 else:
     memsize = "31G"
 
