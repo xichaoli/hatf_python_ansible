@@ -29,6 +29,15 @@ def test_cpu_num():
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     assert str(cpu_num) in ret.stdout
 
+
+@allure.feature("CPU状态测试")
+@allure.title("查看是否有CPU核心离线")
+def test_cpu_offline():
+    ret = subprocess.run(r"ansible {} -m shell -a 'lscpu'".format(board_model),
+                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    assert "Off-line" not in ret.stdout, "有CPU核心离线，请使用 lscpu -e -c 做进一步检测"
+
+
 @allure.feature("CPU状态测试")
 @allure.title("查看CPU主频是否正确")
 def test_cpu_freq():
@@ -36,5 +45,7 @@ def test_cpu_freq():
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
     assert str(cpu_freq) in ret.stdout
 
+
 if __name__ == "__main__":
     pytest.main(["--alluredir", "results/CPU", "test_003_CPU.py"])
+
