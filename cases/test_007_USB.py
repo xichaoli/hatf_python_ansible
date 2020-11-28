@@ -18,7 +18,7 @@ board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210" or board_model == "A82451":
     device_list = ["046d:c534", "0781:5590"]
 else: # A8240
-    device_list = ["0951:1666", "0781:5590", "0951:1665"]
+    device_list = ["046d:c534", "0781:5590", "0951:1665"]
 
 
 @pytest.fixture(scope="module", params=device_list)
