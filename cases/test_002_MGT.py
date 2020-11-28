@@ -16,19 +16,19 @@ from pytest_dependency import depends
 
 board_model = os.getenv("BOARD_MODEL")
 if board_model == "A8210" or board_model == "A8211":
-    port_list = ["enP1p36s12f0"]
+    port_list = ["enP1p36s12f0", "enP1p36s12f1"]
 else:
     port_list = ["enp9s0"]
 
 
 @pytest.fixture(scope="module", params=port_list)
 def plug_into_cable(request):
-   """测试前确认网线是否插好"""
-   port = request.param
-   if os.getenv("MORE_INTERACTIVE"):
+    """测试前确认网线是否插好"""
+    port = request.param
+    if os.getenv("MORE_INTERACTIVE"):
         w = Whiptail(width=60, height=10, title="请确认")
         w.msgbox("请确认管理网口 {} 的网线已接入千兆网络".format(port))
-   return port
+    return port
 
 
 @allure.feature("管理网口测试")
@@ -37,8 +37,10 @@ def plug_into_cable(request):
 def test_interface_ping(plug_into_cable):
     if plug_into_cable == "enp9s0":
         dst_ip = "192.168.0.92"
-    else:
+    elif plug_into_cable == "enP1p36s12f0":
         dst_ip = "192.168.0.91"
+    else:
+        dst_ip = "192.168.1.91"
 
     ret = subprocess.run("ping -c 3 {}".format(dst_ip), shell=True, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, universal_newlines=True, check=False)
