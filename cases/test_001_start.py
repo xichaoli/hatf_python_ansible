@@ -7,6 +7,7 @@ Date: 2020-10-12
 Description: Determines whether the system started successfully.
 """
 
+import os
 import allure
 import pytest
 from whiptail import Whiptail
