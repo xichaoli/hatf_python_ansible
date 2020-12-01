@@ -22,6 +22,8 @@ if board_model == "A8210":
     device_list = ["03:00", "04:00", "0001:27:00"]
 elif board_model == "A8211":
     device_list = ["03:00", "0001:25:00"]
+elif board_model == "A8212":
+    device_list = ["03:00"]
 elif board_model == "A8246":
     device_list = ["0001:24:00", "0001:25:00"]
 elif board_model == "A8245":
@@ -61,6 +63,8 @@ def test_pcie_card_identification(plug_into_pcie_card):
 
     if board_model == "A8211":
         assert "8086:1521" in ret.stdout or "1000:0079" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
+    elif board_model == "A8212":
+        assert "8086:1521" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     elif board_model == "A8246":
         assert "8086:1522" in ret.stdout, "PCIe卡{}识别不正确，请做进一步检查".format(plug_into_pcie_card)
     elif board_model == "A8245" or board_model == "A82451":
@@ -82,7 +86,7 @@ def test_pcie_card_protocol(request, plug_into_pcie_card):
             assert "Speed 5GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
         else:
             assert "Speed 5GT/s, Width x4" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
-    elif board_model == "A8211" or board_model == "A8246":
+    elif board_model == "A8211" or board_model == "A8212" or board_model == "A8246":
         assert "Speed 5GT/s, Width x4" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)
     else:
         assert "Speed 8GT/s, Width x8" in ret.stdout, "PCIe卡{}连接状态不正确，请做进一步检查".format(plug_into_pcie_card)

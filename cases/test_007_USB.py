@@ -47,7 +47,7 @@ def plug_into_usb(request):
 @allure.feature("USB端口测试")
 @allure.title("查看U盘是否被正确识别")
 @pytest.mark.dependency()
-@pytest.mark.skipif(board_model=="A8211" or board_model=="A8246", reason="此型号产品没有使用USB口")
+@pytest.mark.skipif(board_model=="A8211" or board_model=="A8212" or board_model=="A8246", reason="此型号产品没有使用USB口")
 def test_usb_identification(plug_into_usb):
     ret = subprocess.run("ansible {} -m shell -a 'lsusb -d {}'".format(board_model, plug_into_usb),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)

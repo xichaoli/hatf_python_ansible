@@ -15,7 +15,7 @@ from whiptail import Whiptail
 from pytest_dependency import depends
 
 board_model = os.getenv("BOARD_MODEL")
-if board_model == "A8210" or board_model == "A8211":
+if board_model == "A8210" or board_model == "A8211" or board_model == "A8212":
     port_list = ["enP1p36s12f0", "enP1p36s12f1"]
 else:
     port_list = ["enp9s0"]
@@ -55,7 +55,7 @@ def test_interface_ping(plug_into_cable):
 @allure.title("查看管理网口是否被正确识别")
 @pytest.mark.dependency()
 def test_interface_identification(request, plug_into_cable):
-    if board_model == "A8210" or board_model == "A8211":
+    if board_model == "A8210" or board_model == "A8211" or board_model == "A8212":
         drive = "st_gmac"
     else:
         drive = "igb"

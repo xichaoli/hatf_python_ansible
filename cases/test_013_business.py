@@ -18,6 +18,8 @@ board_model = os.getenv("BOARD_MODEL")
 
 if board_model == "A8211":
     port_list = ["enp3s0f0", "enp3s0f1", "enp3s0f2", "enp3s0f3"]
+elif board_model == "A8212":
+    port_list = ["enp3s0f0", "enp3s0f1"]
 elif board_model == "A8246":
     port_list = ["enP1p36s0f0", "enP1p36s0f1", "enP1p36s0f2", "enP1p36s0f3"]
 else:
@@ -58,10 +60,7 @@ def test_interface_ping(plug_into_cable):
 @pytest.mark.dependency()
 @pytest.mark.skipif(board_model == "A8210" or board_model == "A8240" or board_model == "A8245", reason="对于主板型号产品，不做业务网口的测试")
 def test_interface_identification(request, plug_into_cable):
-    if board_model == "A8211" or board_model == "A8246" or board_model == "A82451":
-        drive = "igb"
-    else:
-        drive = "ixgbe"
+    drive = "igb"
 
     depends(request, ["test_interface_ping[{}]".format(plug_into_cable)])
     ret = subprocess.run("ansible {} -m shell -a 'ethtool -i {} | grep driver'".format(board_model, plug_into_cable),
@@ -78,10 +77,7 @@ def test_interface_stat(request, plug_into_cable):
     ret = subprocess.run("ansible {} -m shell -a 'ethtool {} | grep Speed:'".format(board_model, plug_into_cable),
                          shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
-    if board_model == "A8211" or board_model == "A8246" or board_model == "A82451":
-        speed = "1000Mb/s"
-    else:
-        speed = "10000Mb/s"
+    speed = "1000Mb/s"
 
     assert speed in ret.stdout
 

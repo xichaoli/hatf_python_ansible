@@ -18,7 +18,7 @@ board_model = os.getenv("BOARD_MODEL")
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 绿色长亮")
 @pytest.mark.skipif(board_model!="A8210" and board_model!="A8240", reason="此型号产品没有使用管理板的可控LED灯")
-def test_beep_up_green():
+def test_led_up_green():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -34,7 +34,7 @@ def test_beep_up_green():
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 绿色闪烁")
 @pytest.mark.skipif(board_model!="A8210" and board_model!="A8240", reason="此型号产品没有使用管理板的可控LED灯")
-def test_beep_blink_green():
+def test_led_blink_green():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),
                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -56,7 +56,7 @@ def test_beep_blink_green():
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 红色长亮")
 @pytest.mark.skipif(board_model!="A8210" and board_model!="A8240", reason="此型号产品没有使用管理板的可控LED灯")
-def test_beep_up_red():
+def test_led_up_red():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 255 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -76,7 +76,7 @@ def test_beep_up_red():
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯 红色闪烁")
 @pytest.mark.skipif(board_model!="A8210" and board_model!="A8240", reason="此型号产品没有使用管理板的可控LED灯")
-def test_beep_blink_red():
+def test_led_blink_red():
     if board_model == "A8210":
         subprocess.run("ansible {} -m shell -a 'echo 127 > /sys/bus/i2c/devices/0-0062/leds/pca955x:1/brightness'".format(board_model),
                        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -96,7 +96,7 @@ def test_beep_blink_red():
 @allure.feature("管理板 SYS LED灯测试")
 @allure.title("查看能否控制LED灯灭")
 @pytest.mark.skipif(board_model!="A8210" and board_model!="A8240", reason="此型号产品没有使用管理板的可控LED灯")
-def test_beep_down():
+def test_led_down():
     if board_model == "A8210":
         with allure.step("熄灭绿色灯"):
             subprocess.run("ansible {} -m shell -a 'echo 0 > /sys/bus/i2c/devices/0-0062/leds/pca955x:0/brightness'".format(board_model),

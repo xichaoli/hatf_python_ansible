@@ -17,8 +17,8 @@ board_model = os.getenv("BOARD_MODEL")
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制电源灯长亮")
-@pytest.mark.skipif(board_model != "A8211" and board_model != "A8246", reason="目前只有A8211与A8246型号产品使用了串口led灯板")
-def test_beep_up_power():
+@pytest.mark.skipif(board_model != "A8211" and board_model != "A8212" and board_model != "A8246", reason="目前型号产品未使用了串口led灯板")
+def test_serial_led_up_power():
     w = Whiptail(width=40, height=10, title="请确认")
     ret = w.yesno("请确认电源灯是否长亮？", default="no")
     assert not ret, "电源灯不是长亮，请做进一步检查"
@@ -26,8 +26,8 @@ def test_beep_up_power():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制故障灯长亮")
-@pytest.mark.skipif(board_model != "A8211" and board_model != "A8246", reason="目前只有A8211与A8246型号产品使用了串口led灯板")
-def test_beep_up_fail():
+@pytest.mark.skipif(board_model != "A8211" and board_model != "A8212" and board_model != "A8246", reason="目前型号产品未使用了串口led灯板")
+def test_serial_led_up_fail():
     subprocess.run("ansible {} -m shell -a 'serled 0 0 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -38,8 +38,8 @@ def test_beep_up_fail():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制故障灯熄灭")
-@pytest.mark.skipif(board_model != "A8211" and board_model != "A8246", reason="目前只有A8211与A8246型号产品使用了串口led灯板")
-def test_beep_down_fail():
+@pytest.mark.skipif(board_model != "A8211" and board_model != "A8212" and board_model != "A8246", reason="目前型号产品未使用了串口led灯板")
+def test_serial_led_down_fail():
     subprocess.run("ansible {} -m shell -a 'serled 0 0 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -50,8 +50,8 @@ def test_beep_down_fail():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制报警灯长亮")
-@pytest.mark.skipif(board_model != "A8211" and board_model != "A8246", reason="目前只有A8211与A8246型号产品使用了串口led灯板")
-def test_beep_up_alarm():
+@pytest.mark.skipif(board_model != "A8211" and board_model != "A8212" and board_model != "A8246", reason="目前型号产品未使用了串口led灯板")
+def test_serial_led_up_alarm():
     subprocess.run("ansible {} -m shell -a 'serled 0 1 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -62,8 +62,8 @@ def test_beep_up_alarm():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制报警灯熄灭")
-@pytest.mark.skipif(board_model != "A8211" and board_model != "A8246", reason="目前只有A8211与A8246型号产品使用了串口led灯板")
-def test_beep_down_alarm():
+@pytest.mark.skipif(board_model != "A8211" and board_model != "A8212" and board_model != "A8246", reason="目前型号产品未使用了串口led灯板")
+def test_serial_led_down_alarm():
     subprocess.run("ansible {} -m shell -a 'serled 0 1 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -123,7 +123,7 @@ def test_serial_led_down_slave():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网1灯长亮")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_up_internal1():
+def test_serial_led_up_internal1():
     subprocess.run("ansible {} -m shell -a 'serled 2 7 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -135,7 +135,7 @@ def test_beep_up_internal1():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网1灯熄灭")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_down_internal1():
+def test_serial_led_down_internal1():
     subprocess.run("ansible {} -m shell -a 'serled 2 7 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -147,7 +147,7 @@ def test_beep_down_internal1():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网2灯长亮")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_up_internal2():
+def test_serial_led_up_internal2():
     subprocess.run("ansible {} -m shell -a 'serled 2 6 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -159,7 +159,7 @@ def test_beep_up_internal2():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网2灯熄灭")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_down_internal2():
+def test_serial_led_down_internal2():
     subprocess.run("ansible {} -m shell -a 'serled 2 6 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -171,7 +171,7 @@ def test_beep_down_internal2():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网3灯长亮")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_up_internal3():
+def test_serial_led_up_internal3():
     subprocess.run("ansible {} -m shell -a 'serled 2 5 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -183,7 +183,7 @@ def test_beep_up_internal3():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网灯3熄灭")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_internal3():
+def test_serial_led_internal3():
     subprocess.run("ansible {} -m shell -a 'serled 2 5 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -194,7 +194,7 @@ def test_beep_internal3():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网4灯长亮")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_up_internal4():
+def test_serial_led_up_internal4():
     subprocess.run("ansible {} -m shell -a 'serled 2 4 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -206,7 +206,7 @@ def test_beep_up_internal4():
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制内网4灯熄灭")
 @pytest.mark.skipif(board_model != "A8211", reason="目前只有A8211型号产品的串口led灯板有内网灯")
-def test_beep_down_internal4():
+def test_serial_led_down_internal4():
     subprocess.run("ansible {} -m shell -a 'serled 2 4 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
@@ -218,7 +218,7 @@ def test_beep_down_internal4():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制光口1灯长亮")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有光口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有光口1灯")
 def test_serial_led_up_fiber1():
     subprocess.run("ansible {} -m shell -a 'serled 2 7 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -230,7 +230,7 @@ def test_serial_led_up_fiber1():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制光口1灯熄灭")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有光口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有光口1灯")
 def test_serial_led_down_fiber1():
     subprocess.run("ansible {} -m shell -a 'serled 2 7 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -242,7 +242,7 @@ def test_serial_led_down_fiber1():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制光口2灯长亮")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有光口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有光口2灯")
 def test_serial_led_up_fiber2():
     subprocess.run("ansible {} -m shell -a 'serled 2 6 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -254,7 +254,7 @@ def test_serial_led_up_fiber2():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制光口2灯熄灭")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有光口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有光口2灯")
 def test_serial_led_down_fiber2():
     subprocess.run("ansible {} -m shell -a 'serled 2 6 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -312,7 +312,7 @@ def test_serial_led_down_fiber4():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制电口1灯长亮")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有电口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口1灯")
 def test_serial_led_up_TP1():
     subprocess.run("ansible {} -m shell -a 'serled 2 3 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -324,7 +324,7 @@ def test_serial_led_up_TP1():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制电口1灯熄灭")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有电口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口1灯")
 def test_serial_led_down_TP1():
     subprocess.run("ansible {} -m shell -a 'serled 2 3 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -336,7 +336,7 @@ def test_serial_led_down_TP1():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制电口2灯长亮")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有电口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口2灯")
 def test_serial_led_up_TP2():
     subprocess.run("ansible {} -m shell -a 'serled 2 2 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
@@ -348,7 +348,7 @@ def test_serial_led_up_TP2():
 
 @allure.feature("串口LED灯板测试")
 @allure.title("查看能否控制电口2灯熄灭")
-@pytest.mark.skipif(board_model != "A8246", reason="目前只有A8246型号产品的串口led灯板有电口灯")
+@pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口2灯")
 def test_serial_led_down_TP2():
     subprocess.run("ansible {} -m shell -a 'serled 2 2 0'".format(board_model), shell=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)

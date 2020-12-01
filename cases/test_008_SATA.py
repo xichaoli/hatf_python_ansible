@@ -18,6 +18,8 @@ if board_model == "A8240":
     disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1", "DGDZM256S3DMASD"]
 elif board_model == "A8246":
     disk_model = ["WD1004FBYZ-23YC"]
+elif board_model == "A8212":
+    disk_model = ["GG46T256S3C27"]
 else:
     disk_model = ["WD1004FBYZ-23YC", "ST1000VX005-2EZ1"]
 

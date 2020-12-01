@@ -6,6 +6,10 @@
 [A8211]
 192.168.0.91 ansible_ssh_user=root
 
+##########     绿盟防火墙    ##########
+[A8212]
+192.168.0.91 ansible_ssh_user=root
+
 ##########      主板测试     ##########
 [A8240]
 192.168.0.92 ansible_ssh_user=root

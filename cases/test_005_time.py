@@ -18,7 +18,7 @@ board_model = os.getenv("BOARD_MODEL")
 @allure.feature("时间测试")
 @allure.title("从ntp服务器同步时间")
 def test_time_sync():
-    ret = subprocess.run("ansible {} -m shell -a 'ntpdate -u 192.168.0.89'".format(board_model), shell=True,
+    ret = subprocess.run("ansible {} -m shell -a 'ntpdate -u 192.168.0.100'".format(board_model), shell=True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, universal_newlines=True, check=True)
     assert 0 == ret.returncode
