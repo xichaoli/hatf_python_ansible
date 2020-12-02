@@ -39,6 +39,8 @@ def test_interface_ping(plug_into_cable):
         dst_ip = "192.168.0.92"
     elif plug_into_cable == "enP1p36s12f0":
         dst_ip = "192.168.0.91"
+    elif plug_into_cable == "enP1p36s12f1":
+        dst_ip = "192.168.2.91"
     else:
         dst_ip = "192.168.1.91"
 

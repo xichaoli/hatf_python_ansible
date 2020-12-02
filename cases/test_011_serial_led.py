@@ -314,8 +314,12 @@ def test_serial_led_down_fiber4():
 @allure.title("查看能否控制电口1灯长亮")
 @pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口1灯")
 def test_serial_led_up_TP1():
-    subprocess.run("ansible {} -m shell -a 'serled 2 3 1'".format(board_model), shell=True, 
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    if board_model == "A8212":
+        subprocess.run("ansible {} -m shell -a 'serled 2 5 1'".format(board_model), shell=True, 
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    else:
+        subprocess.run("ansible {} -m shell -a 'serled 2 3 1'".format(board_model), shell=True, 
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
     ret = w.yesno("请确认电口1灯是否长亮？", default="yes")
@@ -326,8 +330,12 @@ def test_serial_led_up_TP1():
 @allure.title("查看能否控制电口1灯熄灭")
 @pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口1灯")
 def test_serial_led_down_TP1():
-    subprocess.run("ansible {} -m shell -a 'serled 2 3 0'".format(board_model), shell=True,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    if board_model == "A8212":
+        subprocess.run("ansible {} -m shell -a 'serled 2 5 0'".format(board_model), shell=True, 
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    else:
+        subprocess.run("ansible {} -m shell -a 'serled 2 3 0'".format(board_model), shell=True,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
     ret = w.yesno("请确认电口1灯是否熄灭？", default="yes")
@@ -338,9 +346,13 @@ def test_serial_led_down_TP1():
 @allure.title("查看能否控制电口2灯长亮")
 @pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口2灯")
 def test_serial_led_up_TP2():
-    subprocess.run("ansible {} -m shell -a 'serled 2 2 1'".format(board_model), shell=True, 
+    if board_model == "A8212":
+        subprocess.run("ansible {} -m shell -a 'serled 2 4 1'".format(board_model), shell=True, 
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
-
+    else:
+        subprocess.run("ansible {} -m shell -a 'serled 2 2 1'".format(board_model), shell=True, 
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    
     w = Whiptail(width=40, height=10, title="请确认")
     ret = w.yesno("请确认电口2灯是否长亮？", default="yes")
     assert ret, "电口2灯不是长亮，请做进一步检查"
@@ -350,8 +362,12 @@ def test_serial_led_up_TP2():
 @allure.title("查看能否控制电口2灯熄灭")
 @pytest.mark.skipif(board_model != "A8246" and board_model != "A8212", reason="目前型号产品的串口led灯板没有电口2灯")
 def test_serial_led_down_TP2():
-    subprocess.run("ansible {} -m shell -a 'serled 2 2 0'".format(board_model), shell=True,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    if board_model == "A8212":
+        subprocess.run("ansible {} -m shell -a 'serled 2 4 0'".format(board_model), shell=True, 
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
+    else:
+        subprocess.run("ansible {} -m shell -a 'serled 2 2 0'".format(board_model), shell=True, 
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, check=True)
 
     w = Whiptail(width=40, height=10, title="请确认")
     ret = w.yesno("请确认电口2灯是否熄灭？", default="yes")
